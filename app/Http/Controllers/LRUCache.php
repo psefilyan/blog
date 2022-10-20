@@ -17,7 +17,8 @@ class LRUCache extends Controller
 
     }
 
-    public function put(string $key, $value, int $expire){
+    public function put(string $key, $value, int $expire)
+    {
         if(count($this->cache)==$this->capacity)
         {
             array_shift($this->cache);
@@ -31,7 +32,8 @@ class LRUCache extends Controller
     /**
      * @throws \Exception
      */
-    public function get(string $key){
+    public function get(string $key)
+    {
         if(isset($this->cache[$key]) && $this->cache[$key]['exp_date'] >= Carbon::now())
         {
             return $this->cache[$key];
@@ -44,11 +46,13 @@ class LRUCache extends Controller
     {
         return isset($this->cache[$key]) && $this->cache[$key]['exp_date'] >= Carbon::now();
     }
-    public function remove(string $key){
+    public function remove(string $key)
+    {
         if (isset($this->cache[$key]))
             unset($this->cache[$key]);
     }
-    public function size():int{
+    public function size():int
+    {
         return count($this->cache);
     }
 }
