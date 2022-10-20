@@ -19,7 +19,7 @@ class LRUCache extends Controller
 
     public function put(string $key, $value, int $expire)
     {
-        if(count($this->cache)==$this->capacity)
+        if(count($this->cache)==$this->capacity && !isset($this->cache[$key]))
         {
             array_shift($this->cache);
         }
