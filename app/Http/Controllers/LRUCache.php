@@ -8,20 +8,20 @@
     class LRUCache extends Controller {
         public $capacity;
         public $cache = [];
-        public $last_used = [];
+        public $least_used = [];
 
-        public function __construct(int $capacity, $cache, $last_used) {
+
+        public function __construct(int $capacity) {
             $this->capacity = $capacity;
-            $this->cache = $cache;
-            $this->last_used = $last_used;
         }
 
         public function put(string $key, $value, int $expire) {
             if(count($this->cache) == $this->capacity && !isset($this->cache[$key])){
-                $last = end($this->last_used);
-                $this->remove($last);
-                array_pop($this->last_used);
+                $arr = array_keys($this->least_used, min($this->least_used));
+                $this->remove($arr[0]);
             }
+            $this->least_used[$key] = 0;
+
             $this->cache[$key] = $value;
             $this->cache[$key]['exp_date'] = Carbon::now()->addSeconds($expire);
         }
@@ -31,7 +31,9 @@
          */
         public function get(string $key) {
             if(isset($this->cache[$key]) && $this->cache[$key]['exp_date'] >= Carbon::now()){
-                array_unshift($this->last_used, $this->cache[$key]);
+                $this->least_used[$this->cache[$key]]++;
+
+
                 return $this->cache[$key];
             }
             else {
